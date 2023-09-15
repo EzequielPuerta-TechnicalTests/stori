@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+
+  core:
+    build:
+      context: ./stori
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - ${STORI_CORE_PORT:-8000}:8000
+    volumes:
+      - ${STORI_CORE_TRX_VOLUME:-./input}:/input
+      - ./stori:/stori
+    depends_on:
+      - postgres
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:?err}
+      - POSTGRES_USER=${POSTGRES_USER:?err}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?err}
+      - POSTGRES_PORT=${POSTGRES_PORT:-5432}
+      - SECRET_KEY=${STORI_CORE_SECRET_KEY:?err}
+
+  postgres:
+    image: postgres:16rc1-alpine
+    restart: unless-stopped
+    ports:
+      - ${POSTGRES_PORT:-5432}:5432
+    volumes:
+      - ${POSTGRES_DATA_PATH:-./data/postgres/}:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:?err}
+      - POSTGRES_USER=${POSTGRES_USER:?err}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?err}

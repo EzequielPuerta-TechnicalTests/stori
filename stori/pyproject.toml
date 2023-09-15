@@ -1,16 +1,25 @@
 [tool.poetry]
 name = "stori"
 version = "0.1.0"
-description = ""
-authors = ["Ezequiel Puerta <eze19.2009@gmail.com>"]
+description = "A technical test for a Python Backend job at Stori"
+authors = ["Armando Ezequiel Puerta <armando.ezequiel.puerta@gmail.com>"]
+license = "MIT License"
 readme = "README.md"
+homepage = "https://github.com/EzequielPuerta-TechnicalTests/stori"
+repository = "https://github.com/EzequielPuerta-TechnicalTests/stori"
+documentation = "https://github.com/EzequielPuerta-TechnicalTests/stori"
 
 [tool.poetry.dependencies]
 python = "^3.10"
+django = "^4.2.5"
+djangorestframework = "^3.14.0"
+psycopg2-binary = "^2.9.7"
+django-ckeditor = "^6.7.0"
 
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.2"
+pytest-django = "^4.5.2"
 pytest-cov = "^4.1.0"
 pre-commit = "^3.4.0"
 flake8 = "^6.1.0"
@@ -37,18 +46,15 @@ exclude = '''
 
 (
   /(
-      \.eggs         # exclude a few common directories in the
-    | \.git          # root of the project
-    | \.hg
+      \.git
     | \.mypy_cache
-    | \.tox
-    | \.venv
-    | _build
-    | buck-out
     | build
     | dist
   )/
-  | foo.py           # also separately exclude a file named foo.py in
-                     # the root of the project
+  | stori/settings.py
 )
 '''
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "core.settings"
+python_files = ["test_*.py"]

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Home</h1>
+
+<h2>Menu:</h2>
+
+<ul>
+    <li><a href="{% url 'index' %}">Home</a></li>
+
+    Customers
+    <ul>
+    <li><a href="{% url 'accounts' %}">Accounts</a></li>
+    </ul>
+
+    Mailing
+    <ul>
+    <li><a href="{% url 'mails_data' %}">Mail Data</a></li>
+    </ul>
+</ul>
+
+{% endblock %}
