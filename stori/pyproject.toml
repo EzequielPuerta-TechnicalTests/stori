@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "stori"
 version = "0.1.0"
-description = "A technical test for a Python Backend job at Stori"
+description = "A technical test for a Python Backend job at Stori. Its the backend."
 authors = ["Armando Ezequiel Puerta <armando.ezequiel.puerta@gmail.com>"]
 license = "MIT License"
 readme = "README.md"

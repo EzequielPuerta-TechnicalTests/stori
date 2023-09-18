@@ -21,7 +21,8 @@ class Migration(migrations.Migration):
             model_name="maildata",
             name="subject",
             field=models.CharField(
-                help_text="Account Balance Summary", max_length=100
+                help_text="Account Balance Summary",
+                max_length=100,
             ),
         ),
     ]

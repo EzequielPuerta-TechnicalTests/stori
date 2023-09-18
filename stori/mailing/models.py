@@ -9,7 +9,8 @@ class MailData(Model):
         help_text="Fields for automatic emails of account balances",
     )
     sender = EmailField(
-        max_length=100, help_text="no-reply.balances@stori.com"
+        max_length=100,
+        help_text="no-reply.balances@stori.com",
     )
     subject = CharField(max_length=100, help_text="Account Balance Summary")
     active = BooleanField()

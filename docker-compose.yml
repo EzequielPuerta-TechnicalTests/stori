@@ -5,11 +5,11 @@ services:
     build:
       context: ./stori
       dockerfile: Dockerfile
+    container_name: core
     restart: unless-stopped
     ports:
       - ${STORI_CORE_PORT:-8000}:8000
     volumes:
-      - ${STORI_CORE_TRX_VOLUME:-./input}:/input
       - ./stori:/stori
     depends_on:
       - postgres
@@ -22,6 +22,7 @@ services:
 
   postgres:
     image: postgres:16rc1-alpine
+    container_name: postgres
     restart: unless-stopped
     ports:
       - ${POSTGRES_PORT:-5432}:5432
@@ -31,3 +32,61 @@ services:
       - POSTGRES_DB=${POSTGRES_DB:?err}
       - POSTGRES_USER=${POSTGRES_USER:?err}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?err}
+
+  rabbitmq:
+    image: bitnami/rabbitmq:3.8.27
+    container_name: rabbitmq
+    ports:
+      - ${RABBIT_MQ_PORT:-5672}:5672
+
+  task_manager:
+    build:
+      context: ./task_manager
+      dockerfile: Dockerfile
+    container_name: task_manager
+    restart: unless-stopped
+    volumes:
+      - ./task_manager:/task_manager
+    ports:
+      - ${TASK_MANAGER_PORT:-6001}:5000
+    environment:
+      APP_ENV: "prod"
+      APP_DEBUG: "False"
+      TASK_MANAGER_PORT: ${TASK_MANAGER_PORT:-6001}
+      MONGODB_DATABASE: ${MONGO_INITDB_DATABASE:?err}
+      MONGODB_USERNAME: ${MONGO_INITDB_ROOT_USERNAME:?err}
+      MONGODB_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:?err}
+      MONGODB_HOSTNAME: ${MONGO_HOSTNAME:-mongodb}
+      MONGODB_PORT: ${MONGO_PORT:-27017}
+    depends_on:
+      - rabbitmq
+      - file_processor
+      - mongodb
+
+  file_processor:
+    build:
+      context: ./file_processor
+      dockerfile: Dockerfile
+    container_name: file_processor
+    restart: unless-stopped
+    volumes:
+      - ${TRX_VOLUME:-./input}:/input
+      - ./file_processor:/file_processor
+    depends_on:
+      - rabbitmq
+
+  mongodb:
+    image: mongo:5
+    container_name: mongodb
+    restart: unless-stopped
+    command: mongod --auth
+    ports:
+      - ${MONGO_PORT:-27017}:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME:?err}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:?err}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE:?err}
+      MONGODB_DATA_DIR: ${MONGODB_DATA_DIR:-./data/mongodb/}
+      MONDODB_LOG_DIR: ${MONDODB_LOG_DIR:-/dev/null}
+    volumes:
+      - ${MONGODB_DATA_DIR:-./data/mongodb/}:/data/db

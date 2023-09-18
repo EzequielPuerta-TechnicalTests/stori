@@ -8,5 +8,7 @@ def accounts(request: HttpRequest) -> HttpResponse:
     num_accounts = Account.objects.all().count()
 
     return render(
-        request, "accounts.html", context={"num_accounts": num_accounts}
+        request,
+        "accounts.html",
+        context={"num_accounts": num_accounts},
     )

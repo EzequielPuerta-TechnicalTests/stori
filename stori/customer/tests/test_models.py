@@ -25,10 +25,8 @@ def test_account_customer_name_validation():
     email = "eze19.2009@gmail.com"
     with pytest.raises(DataError) as exception:
         Account.objects.create(customer_name=name, email=email)
-    assert (
-        str(exception.value)
-        == "value too long for type character varying(100)\n"
-    )
+    expected_error = "value too long for type character varying(100)\n"
+    assert str(exception.value) == expected_error
 
 
 @pytest.mark.django_db

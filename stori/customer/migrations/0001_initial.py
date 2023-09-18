@@ -28,7 +28,8 @@ class Migration(migrations.Migration):
                 (
                     "email",
                     models.EmailField(
-                        help_text="john.doe@gmail.com", max_length=256
+                        help_text="john.doe@gmail.com",
+                        max_length=256,
                     ),
                 ),
             ],
