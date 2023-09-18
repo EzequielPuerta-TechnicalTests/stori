@@ -1,12 +1,12 @@
-from ..src.months import AUGUST, JULY, MONTH, YEAR
-from ..src.summary import Credit, Debit, Summary, Transaction
+from src.months import AUGUST, JULY, MONTH, YEAR
+from src.summary import Credit, Debit, Summary, Transaction
 
 
-def rest_of_the_year(current_months) -> list[MONTH]:
+def rest_of_the_year(current_months: list[MONTH]) -> list[MONTH]:
     return [month for month in YEAR if (month not in current_months)]
 
 
-def test_credit_creation():
+def test_credit_creation():  # type: ignore
     data = ("0", "7/15", "+60.5")
     transaction = Transaction.related_to(*data)
     assert isinstance(transaction, Credit)
@@ -20,7 +20,7 @@ def test_credit_creation():
     assert transaction.signed_amount == 60.5
 
 
-def test_debit_creation():
+def test_debit_creation():  # type: ignore
     data = ("1", "7/28", "-10.3")
     transaction = Transaction.related_to(*data)
     assert isinstance(transaction, Debit)
@@ -34,20 +34,20 @@ def test_debit_creation():
     assert transaction.signed_amount == -10.3
 
 
-def test_credit_representation():
+def test_credit_representation():  # type: ignore
     data = ("0", "7/15", "+60.5")
     transaction = Transaction.related_to(*data)
     assert repr(transaction) == "Credit<Id: 0, Date: 7/15, Amount: 60.5>"
 
 
-def test_debit_representation():
+def test_debit_representation():  # type: ignore
     data = ("1", "7/28", "-10.3")
     transaction = Transaction.related_to(*data)
     print(str(transaction))
     assert repr(transaction) == "Debit<Id: 1, Date: 7/28, Amount: -10.3>"
 
 
-def test_transaction_equality():
+def test_transaction_equality():  # type: ignore
     credit = Transaction.related_to("0", "7/15", "+60.5")
     same_credit = Transaction.related_to("0", "7/15", "+60.5")
     other_credit = Transaction.related_to("0", "7/15", "+60")
@@ -57,7 +57,7 @@ def test_transaction_equality():
     assert not credit == debit
 
 
-def test_transaction_hashing():
+def test_transaction_hashing():  # type: ignore
     credit = Transaction.related_to("0", "7/15", "+60.5")
     same_credit = Transaction.related_to("0", "7/15", "+60.5")
     other_credit = Transaction.related_to("0", "7/15", "+60")
@@ -67,7 +67,7 @@ def test_transaction_hashing():
     assert not set((credit,)) == set((debit,))
 
 
-def test_credit_and_number_addition():
+def test_credit_and_number_addition():  # type: ignore
     transaction = Transaction.related_to("0", "7/15", "+60.5")
     assert transaction + 10 == 70.5
     assert transaction + 0.5 == 61
@@ -75,7 +75,7 @@ def test_credit_and_number_addition():
     assert transaction + -100.5 == -40
 
 
-def test_debit_and_number_addition():
+def test_debit_and_number_addition():  # type: ignore
     transaction = Transaction.related_to("1", "7/28", "-10.3")
     assert transaction + 20 == 9.7
     assert transaction + 30.3 == 20
@@ -83,7 +83,7 @@ def test_debit_and_number_addition():
     assert transaction + -10 == -20.3
 
 
-def test_summary_creation():
+def test_summary_creation():  # type: ignore
     summary = Summary()
 
     assert summary.total_balance == 0
@@ -97,7 +97,7 @@ def test_summary_creation():
     assert summary.average_credit_amount == 0
 
 
-def test_summary_initialization():
+def test_summary_initialization():  # type: ignore
     transaction = Transaction.related_to("0", "7/15", "+60.5")
     summary = Summary(of=[transaction])
 
@@ -114,7 +114,7 @@ def test_summary_initialization():
     assert summary.average_credit_amount == transaction.signed_amount
 
 
-def test_credit_and_summary_addition():
+def test_credit_and_summary_addition():  # type: ignore
     transaction = Transaction.related_to("0", "7/15", "+60.5")
     summary = Summary() + transaction
 
@@ -131,7 +131,7 @@ def test_credit_and_summary_addition():
     assert summary.average_credit_amount == transaction.signed_amount
 
 
-def test_debit_and_summary_addition():
+def test_debit_and_summary_addition():  # type: ignore
     transaction = Transaction.related_to("1", "7/28", "-10.3")
     summary = Summary() + transaction
 
@@ -148,7 +148,7 @@ def test_debit_and_summary_addition():
     assert summary.average_credit_amount == 0
 
 
-def test_merge_two_credits():
+def test_merge_two_credits():  # type: ignore
     first_credit = Transaction.related_to("0", "7/15", "+60.5")
     second_credit = Transaction.related_to("3", "8/13", "+10")
     summary = first_credit + second_credit
@@ -168,7 +168,7 @@ def test_merge_two_credits():
     assert summary.average_credit_amount == 35.25
 
 
-def test_merge_two_credits_iteratively():
+def test_merge_two_credits_iteratively():  # type: ignore
     first_credit = Transaction.related_to("0", "7/15", "+60.5")
     summary = Summary() + first_credit
     second_credit = Transaction.related_to("3", "8/13", "+10")
@@ -176,22 +176,22 @@ def test_merge_two_credits_iteratively():
     assert summary == first_credit + second_credit
 
 
-def test_summary_initialization_with_multiple_transactions():
+def test_summary_initialization_with_multiple_transactions():  # type: ignore
     first_credit = Transaction.related_to("0", "7/15", "+60.5")
     second_credit = Transaction.related_to("3", "8/13", "+10")
     summary = Summary(of=[first_credit, second_credit])
     assert summary == first_credit + second_credit
 
 
-def test_merge_multiple_transactions():
+def test_merge_multiple_transactions():  # type: ignore
     first = Transaction.related_to("0", "7/15", "+60.5")
     second = Transaction.related_to("1", "7/28", "-10.3")
     third = Transaction.related_to("2", "8/2", "-20.46")
     fourth = Transaction.related_to("3", "8/13", "+10")
 
-    summary1 = ((first + second) + third) + fourth
+    summary1 = ((first + second) + third) + fourth  # type: ignore
     summary2 = first + (second + (third + fourth))
-    summary3 = (first + second) + (third + fourth)
+    summary3 = (first + second) + (third + fourth)  # type: ignore
     summary4 = sum([second, third, fourth], first)
     summary5 = sum([first, second, third, fourth], Summary())
 
@@ -201,12 +201,12 @@ def test_merge_multiple_transactions():
     assert summary1 == summary5
 
 
-def test_round_transaction_addition():
-    first = 60.5
-    second = -10.3
-    third = -20.46
-    fourth = 10
-    result = first + (second + (third + fourth))
+def test_round_transaction_addition():  # type: ignore
+    amount1 = 60.5
+    amount2 = -10.3
+    amount3 = -20.46
+    amount4 = 10
+    result = amount1 + (amount2 + (amount3 + amount4))
     assert result == 39.739999999999995
 
     first = Transaction.related_to("0", "7/15", "+60.5")
@@ -214,4 +214,4 @@ def test_round_transaction_addition():
     third = Transaction.related_to("2", "8/2", "-20.46")
     fourth = Transaction.related_to("3", "8/13", "+10")
     summary = first + (second + (third + fourth))
-    assert summary.total_balance == 39.74
+    assert summary.total_balance == 39.74  # type: ignore

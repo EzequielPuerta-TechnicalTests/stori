@@ -1,10 +1,16 @@
 from api.database import mongo
 from api.exceptions import ResourceNotFound
 from api.tasks.schema import TaskSchema
+from celery import Celery
 from flask import request
 from flask_restful import Resource
 
 task_schema = TaskSchema()
+event_broker = Celery(
+    "task_manager",
+    broker="pyamqp://user:bitnami@rabbitmq",
+    backend="rpc://user:bitnami@rabbitmq",
+)
 
 
 class TaskListResource(Resource):
@@ -17,6 +23,13 @@ class TaskListResource(Resource):
         task = task_schema.load(data)
         task_data = task_schema.dump(task)
         mongo.db.tasks.insert_one(task_data)
+        event_broker.send_task(
+            "pendings",
+            (
+                task_data["file_name"],
+                task_data["_id"],
+            ),
+        )
         return task_data, 201
 
 

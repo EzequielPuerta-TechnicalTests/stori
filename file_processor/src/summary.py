@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
-from .months import MONTH
+from src.months import MONTH
 
 
 class Transaction(ABC):

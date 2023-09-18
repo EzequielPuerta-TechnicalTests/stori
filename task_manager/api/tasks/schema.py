@@ -6,6 +6,7 @@ class TaskSchema(Schema):
     _id = fields.Str()
     customer_id = fields.Int()
     file_name = fields.Str()
+    status = fields.Str()
 
     @post_load
     def make(self, data, **kwargs):
