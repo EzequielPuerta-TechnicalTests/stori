@@ -1,6 +1,26 @@
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
 
 
-def index(request: HttpRequest) -> HttpResponse:
-    return render(request, "index.html", context={})
+@api_view(["GET"])
+def api_root(request, format=None):  # type: ignore
+    return Response(
+        {
+            "customers_data": reverse(
+                "customerdata-list",
+                request=request,
+                format=format,
+            ),
+            "accounts": reverse(
+                "account-list",
+                request=request,
+                format=format,
+            ),
+            "mails_data": reverse(
+                "maildata-list",
+                request=request,
+                format=format,
+            ),
+        }
+    )

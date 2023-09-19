@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
     "customer.apps.CustomerConfig",
     "mailing.apps.MailingConfig",
     "ckeditor",
@@ -55,11 +56,10 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "core.urls"
 
-APPS = ["core", "customer", "mailing"]
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, app, "templates") for app in APPS],
+        "DIRS": [],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

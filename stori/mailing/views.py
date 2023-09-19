@@ -1,25 +1,24 @@
-from ckeditor.fields import RichTextFormField
-from django.forms import ModelForm
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
+from rest_framework import generics, renderers
+from rest_framework.response import Response
 
 from .models import MailData
+from .serializers import MailDataSerializer
 
 
-class MailDataForm(ModelForm):
-    class Meta:
-        model = MailData
-        fields = ["body"]
-        widgets = {"body": RichTextFormField(config_name="default")}
+class MailDataList(generics.ListCreateAPIView):
+    queryset = MailData.objects.all()
+    serializer_class = MailDataSerializer
 
 
-def mails_data(request: HttpRequest) -> HttpResponse:
-    num_mails_data = MailData.objects.all().count()
-    return render(
-        request,
-        "mails_data.html",
-        context={
-            "num_mails_data": num_mails_data,
-            "rich_text_form": MailDataForm(),
-        },
-    )
+class MailDataDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = MailData.objects.all()
+    serializer_class = MailDataSerializer
+
+
+class MailDataBody(generics.GenericAPIView):
+    queryset = MailData.objects.all()
+    renderer_classes = (renderers.StaticHTMLRenderer,)
+
+    def get(self, request, *args, **kwargs):  # type: ignore
+        mail_data = self.get_object()
+        return Response(mail_data.body)

@@ -1,6 +1,5 @@
 from ckeditor.fields import RichTextField
 from django.db.models import BooleanField, CharField, EmailField, Model
-from django.urls import reverse
 
 
 class MailData(Model):
@@ -18,9 +17,6 @@ class MailData(Model):
 
     def __str__(self) -> str:
         return f"{self.subject} <Active: {self.active}>"
-
-    def get_absolute_url(self) -> str:
-        return reverse("model-detail-view", args=[str(self.id)])
 
     class Meta:
         ordering = ("description", "subject", "sender", "active")

@@ -1,14 +1,24 @@
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
+from rest_framework import generics
 
-from .models import Account
+from .models import Account, CustomerData
+from .serializers import AccountSerializer, CustomerDataSerializer
 
 
-def accounts(request: HttpRequest) -> HttpResponse:
-    num_accounts = Account.objects.all().count()
+class CustomerDataList(generics.ListCreateAPIView):
+    queryset = CustomerData.objects.all()
+    serializer_class = CustomerDataSerializer
 
-    return render(
-        request,
-        "accounts.html",
-        context={"num_accounts": num_accounts},
-    )
+
+class CustomerDataDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CustomerData.objects.all()
+    serializer_class = CustomerDataSerializer
+
+
+class AccountList(generics.ListCreateAPIView):
+    queryset = Account.objects.all()
+    serializer_class = AccountSerializer
+
+
+class AccountDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Account.objects.all()
+    serializer_class = AccountSerializer

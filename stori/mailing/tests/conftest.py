@@ -17,3 +17,14 @@ def mail_data() -> Callable[[], MailData]:
         )
 
     yield _mail_data
+
+
+@pytest.fixture
+def persisted_mail_data() -> MailData:
+    yield MailData.objects.create(
+        description="Automatic emails",
+        sender="balances@stori.com",
+        subject="Account balance",
+        active=True,
+        body="Hello, this is your balance summary.",
+    )
