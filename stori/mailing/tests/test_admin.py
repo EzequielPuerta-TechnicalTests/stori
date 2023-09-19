@@ -1,7 +1,7 @@
 from ..admin import MailDataAdmin
 
 
-def test_meta_list_display():
+def test_meta_list_display() -> None:
     assert MailDataAdmin.list_display == (
         "id",
         "description",

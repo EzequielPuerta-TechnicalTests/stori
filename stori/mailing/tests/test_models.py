@@ -3,7 +3,7 @@ import pytest
 from ..models import MailData
 
 
-def test_mail_data_attributes(mail_data):
+def test_mail_data_attributes(mail_data) -> None:
     mail_data = mail_data()
     assert mail_data.description == "Automatic emails"
     assert mail_data.sender == "balances@stori.com"
@@ -12,7 +12,7 @@ def test_mail_data_attributes(mail_data):
     assert mail_data.body == "Hello, this is your balance summary."
 
 
-def test_meta_ordering():
+def test_meta_ordering() -> None:
     assert MailData._meta.ordering == (
         "description",
         "subject",
@@ -21,13 +21,13 @@ def test_meta_ordering():
     )
 
 
-def test_mail_data_representation(mail_data):
+def test_mail_data_representation(mail_data) -> None:
     mail_data = mail_data()
     assert str(mail_data) == "Account balance <Active: True>"
 
 
 @pytest.mark.django_db
-def test_mail_data_successful_creation():
+def test_mail_data_successful_creation() -> None:
     assert MailData.objects.count() == 0
     MailData.objects.create(
         description="Automatic emails",

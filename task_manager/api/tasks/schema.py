@@ -1,3 +1,5 @@
+from typing import Any
+
 from api.tasks.task import Task
 from marshmallow import Schema, fields, post_load
 
@@ -9,5 +11,5 @@ class TaskSchema(Schema):
     status = fields.Str()
 
     @post_load
-    def make(self, data, **kwargs):
+    def make(self, data: Any, **kwargs: Any) -> Task:
         return Task(**data)
