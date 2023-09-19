@@ -22,5 +22,15 @@ def api_root(request, format=None):  # type: ignore
                 request=request,
                 format=format,
             ),
+            "summaries": reverse(
+                "summary-list",
+                request=request,
+                format=format,
+            ),
+            "transactions": reverse(
+                "transaction-list",
+                request=request,
+                format=format,
+            ),
         }
     )

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "customer.apps.CustomerConfig",
     "mailing.apps.MailingConfig",
+    "transaction.apps.TransactionConfig",
     "ckeditor",
 ]
 

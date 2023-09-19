@@ -24,4 +24,5 @@ urlpatterns = [
     path("", api_root),
     path("", include("customer.urls")),
     path("", include("mailing.urls")),
+    path("", include("transaction.urls")),
 ]
