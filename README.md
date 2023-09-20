@@ -44,7 +44,7 @@ In first place, I wanted to built a backend in Django (using DRF) to manage obje
 
 In the other hand, I wanted a separate component to manage the async tasks for process csv files and sending emails. This would be built with FlaskRestful and backed with a MongoDB database.
 
-The tasks (or workers) are implemented with Python 3.10 and deployed by other container, called File Processor. Between workers and manager is a RabbitMQ container. It is the communitacion channel and Celery is used on it. In first place I would like to program this workers using Golang (I know a little bit, so I wanted to show my desire to learn it), but I haven't enough time.
+The tasks (or workers) are implemented with Python 3.10 and deployed by other container, called File Processor. Between workers and manager is a RabbitMQ container. It is the communication channel and Celery is used on it. In first place I would like to program this workers using Golang (I know a little bit, so I wanted to show my desire to learn it), but I haven't enough time.
 
 ![Architecture](docs/img/architecture.png)
 
