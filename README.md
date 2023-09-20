@@ -87,7 +87,9 @@ GMAIL_APP_PASSWORD=
 Host port for the main container (Django Rest Framework), aka Core.
 
 * `STORI_CORE_SECRET_KEY`
-A secret key asked by Django.
+A secret key requested by Django.
+
+> You can create your own, it doesn't have to be the same as mine.
 
 * `POSTGRES_DB`
 The name of the PostgreSQL database.
@@ -136,6 +138,7 @@ Host path to store all MongoDB's log files.
 
 * `GMAIL_APP_PASSWORD`
 Password related to your Gmail account, for send automatic emails!
+> Scroll just a little if you want to setup your own Gmail's app password.
 
 ### Docker and Docker-compose
 
