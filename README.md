@@ -143,8 +143,27 @@ Just common installation.
 
 ### Gmail Password
 
+If you want to test the code with your own gmail account (setted on the Sender field of the active Mail Data), you must follow the next steps:
 
+1. Go to ["Manage my google account"](https://myaccount.google.com/security)
 
+2. Under "Signing in to Google" confirm that "2-Step Verification" is "On" for the account.
+
+![Gmail Step1](docs/img/gmail_step1.png)
+
+3. Also under "Signing in to Google" Select "App passwords" or search it in the search field.
+
+![Gmail Step2](docs/img/gmail_step2.png)
+
+4. It will ask you for a new app password. Name it.
+
+![Gmail Step3](docs/img/gmail_step3.png)
+
+5. Copy the app password, it looks like: "XXXX XXXX XXXX XXXX"
+
+![Gmail Step4](docs/img/gmail_step4.png)
+
+6. Open the `.env` file and paste the app password to the right of the `GMAIL_APP_PASSWORD` variable. Save it.
 ## Deploy
 
 ```bash
@@ -154,11 +173,11 @@ docker-compose up --build
 
 After some minutes, everything should be up. Then, in other terminal enter the next commands:
 ```bash
-docker exec -it core python manage.py migrate 
+docker exec -it core python manage.py migrate
 ```
 With that, you will recreate the whole PostgreSQL database. And the last command is:
 ```bash
-docker exec -it core python manage.py createsuperuser 
+docker exec -it core python manage.py createsuperuser
 ```
 Follow the steps just to have access to the DRF admin site (if you need it).
 
@@ -271,7 +290,7 @@ There you are! Voila!
 * There are a lot of tests in the differents components. Check it out please. With this commands (and the system running up) its easy to run the different tests from the three main components:
     * `docker exec -it core pytest .`
     * `docker exec -it task_manager pytest .`
-    * `docker exec -it file_processor pytest .` 
+    * `docker exec -it file_processor pytest .`
 
 * I love to play with objects, polymorphism, etc. I had a lot of fun playing with the Transaction and Summary objects from the File Processor. I wanted to achieve something near to a custom aritmethic for transactions. That was my best try.
 
