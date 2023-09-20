@@ -1,9 +1,8 @@
 [tool.poetry]
 name = "task-manager"
 version = "0.1.0"
-description = ""
-authors = ["Ezequiel Puerta <eze19.2009@gmail.com>"]
-readme = "README.md"
+description = "Its the async task manager"
+authors = ["Armando Ezequiel Puerta <armando.ezequiel.puerta@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"

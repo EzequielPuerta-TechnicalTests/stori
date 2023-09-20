@@ -44,7 +44,7 @@ class Client:
                 url = f"{self.base_url}?{'&'.join(params)}"
             else:
                 url = f"{self.base_url}/"
-        return requests.get(url)
+        return requests.get(url).json()
 
     def post(self, data) -> requests.Response:  # type: ignore
-        return requests.post(f"{self.base_url}/", json=data)
+        return requests.post(f"{self.base_url}/", json=data).json()
