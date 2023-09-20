@@ -1,8 +1,9 @@
 import csv
 import os
 
+import notifier as notify
+import src.core_client as core
 from celery import Celery
-from requests import Response, post  # type: ignore
 from src.summary import Summary, Transaction
 
 app = Celery(
@@ -12,46 +13,52 @@ app = Celery(
 )
 
 
-def notify(task_id: str, result: str) -> Response:
-    return post(
-        "http://task_manager:{}/api/tasks/{}/{}".format(
-            os.environ.get("INTERNAL_TASK_MANAGER_PORT"),
-            task_id,
-            result,
-        )
-    )
-
-
-def notify_success(task_id: str) -> Response:
-    return notify(task_id, "success")
-
-
-def notify_error(task_id: str) -> Response:
-    return notify(task_id, "failed")
-
-
 def get_summary_from(lines) -> Summary:  # type: ignore
     trxs = map(lambda line: Transaction.related_to(*line), lines)
     return sum(trxs, Summary())  # type: ignore
 
 
+def process_file(file_path: str, task_id: str) -> None:
+    with open(file_path, "r") as file:
+        notify.success(task_id)
+        lines = csv.reader(file)
+        next(lines, None)  # Ignore csv headers
+        summary = get_summary_from(lines)
+        file_name = os.path.basename(file_path).split("_")[0]
+        account = core.Client.accounts().get(_params={"alias": file_name})
+        print(account)
+        print(str(account))
+        print(repr(account))
+        account = account.json()[0]
+
+        summary_data = {
+            "total_balance": summary.total_balance,
+            "average_debit_amount": summary.average_debit_amount,
+            "average_credit_amount": summary.average_credit_amount,
+            "account": account["url"],
+            "transactions": [],
+        }
+
+        summary_result = core.Client.summaries().post(summary_data).json()
+        transactions = [
+            {
+                "provider_id": transaction.provider_id,
+                "day": transaction.day,
+                "month": transaction.month,
+                "amount": transaction.signed_amount,
+                "summary": summary_result["url"],
+            }
+            for transaction in summary.transactions
+        ]
+
+        core.Client.transactions().post(transactions)
+
+
 @app.task(name="pendings")
-def process_file_named(file_name: str, task_id: str) -> None:
+def process(file_name: str, task_id: str) -> None:
     file_path = os.path.join(os.sep, "input", file_name)
     try:
-        with open(file_path, "r") as transactions_file:
-            if notify_success(task_id).ok:
-                lines = csv.reader(transactions_file)
-                next(lines, None)  # Ignore csv headers
-                summary = get_summary_from(lines)
-
-                if notify_success(task_id).ok:
-                    print(
-                        "File {} processed by task {}: {}".format(
-                            file_name,
-                            task_id,
-                            summary,
-                        )
-                    )
-    except FileNotFoundError:
-        notify_error(task_id)
+        process_file(file_path, task_id)
+        notify.success(task_id)
+    except (FileNotFoundError, KeyError):
+        notify.error(task_id)

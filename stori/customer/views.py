@@ -15,8 +15,20 @@ class CustomerDataDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class AccountList(generics.ListCreateAPIView):
-    queryset = Account.objects.all()
+    # queryset = Account.objects.all()
     serializer_class = AccountSerializer
+
+    def get_queryset(self):  # type: ignore
+        queryset = Account.objects.all()
+        identifier = self.request.query_params.get("identifier")
+        if identifier is not None:
+            return queryset.filter(identifier=identifier)
+        else:
+            alias = self.request.query_params.get("alias")
+            if alias is not None:
+                return queryset.filter(alias=alias)
+            else:
+                return queryset
 
 
 class AccountDetail(generics.RetrieveUpdateDestroyAPIView):

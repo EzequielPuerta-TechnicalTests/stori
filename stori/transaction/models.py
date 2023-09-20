@@ -1,7 +1,6 @@
+from customer.models import Account
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-
-from customer.models import Account
 
 
 class Summary(models.Model):

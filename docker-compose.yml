@@ -72,6 +72,7 @@ services:
       - ./file_processor:/file_processor
     environment:
       INTERNAL_TASK_MANAGER_PORT: 5000
+      INTERNAL_STORI_CORE_PORT: 8000
     depends_on:
       - rabbitmq
       - task_manager
